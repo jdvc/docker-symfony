@@ -19,6 +19,7 @@ class GenusController extends Controller
         $genus->setSpeciesCount(rand(100, 99999));
 
         $em = $this->getDoctrine()->getManager();
+
         $em->persist($genus);
         $em->flush();
 
@@ -33,8 +34,10 @@ class GenusController extends Controller
     {
         // get entity manager
         $em = $this->getDoctrine()->getManager();
+        dump($em->getRepository('AppBundle:Genus'));
         $genuses = $em->getRepository('AppBundle:Genus')
             ->findAll();
+
 
         return $this->render('genus/list.html.twig', [
             'genuses' => $genuses,
