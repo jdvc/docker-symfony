@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20171022214220 extends AbstractMigration
+class Version20171115000124 extends AbstractMigration
 {
     /**
      * @param Schema $schema
@@ -18,7 +18,7 @@ class Version20171022214220 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE genus CHANGE fun_fact fun_fact VARCHAR(255) DEFAULT NULL');
+        $this->addSql('CREATE TABLE genus_note (id INT AUTO_INCREMENT NOT NULL, user_name VARCHAR(255) NOT NULL, user_avatar_filename VARCHAR(255) NOT NULL, note VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
     }
 
     /**
@@ -29,6 +29,6 @@ class Version20171022214220 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE genus CHANGE fun_fact fun_fact VARCHAR(255) NOT NULL COLLATE utf8_unicode_ci');
+        $this->addSql('DROP TABLE genus_note');
     }
 }
