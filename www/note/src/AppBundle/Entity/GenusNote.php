@@ -30,9 +30,16 @@ class GenusNote
     private $userAvatarFilename;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="text")
      */
     private $note;
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Genus")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $genus;
 
     /**
      * @return mixed
@@ -48,6 +55,22 @@ class GenusNote
     public function getUserName()
     {
         return $this->userName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGenus()
+    {
+        return $this->genus;
+    }
+
+    /**
+     * @param mixed $genus
+     */
+    public function setGenus(Genus $genus)
+    {
+        $this->genus = $genus;
     }
 
     /**

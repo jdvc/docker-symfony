@@ -47,7 +47,8 @@ class Genus
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isPublished;
+    // equals true creates a default
+    private $isPublished = true;
 
     /**
      * @return mixed
