@@ -1,5 +1,7 @@
 <?php
 namespace AppBundle\Controller;
+
+use AppBundle\AppBundle;
 use AppBundle\Entity\Genus;
 use AppBundle\Entity\GenusNote;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -7,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+
 class GenusController extends Controller
 {
     /**
@@ -85,8 +88,21 @@ class GenusController extends Controller
         */
         $this->get('logger')
             ->info('Showing genus: '.$genusName);
+
+        $recentNotes = $em->getRepository('AppBundle:GenusNote')
+            ->findAllRecentNotesForGenus($genus);
+
+        // array collection has some special sauce
+        /*
+        $recentNotes = $genus->getNotes()
+            ->filter(function(GenusNote $note){
+               return $note->getCreatedAt() > new \DateTime('- 3 months');
+            });
+        */
+
         return $this->render('genus/show.html.twig', array(
-            'genus' => $genus
+            'genus' => $genus,
+            'recentNoteCount' => count($recentNotes),
         ));
     }
     /**
@@ -96,19 +112,24 @@ class GenusController extends Controller
     public function getNotesAction(Genus $genus)
     {
 
-        dump($genus);
-        $em = $this->getDoctrine()->getManager();
+        foreach ($genus->getNotes() as $note) {
 
-        $notes = $em->getRepository('AppBundle:GenusNotes')->findBy($genus);
+            $notes[] = [
+                'id' => $note->getId(),
+                'username' => $note->getUserName(),
+                'avatarUri' => '/images/'.$note->getUserAvatarFilename(),
+                'note' => $note->getNote(),
+                'date' => $note->getCreatedAt()->format('M d, Y')
 
-        if (!$notes) {
-            throw $this->createNotFoundException('Notes not found for this genus');
+            ];
+
         }
 
         $data = [
-            'notes' => $notes
+            'notes' => $notes,
         ];
 
         return new JsonResponse($data);
+
     }
 }
